@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -12,22 +12,12 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
 
-  // bool isDisabled = false;
-  // @override
-  // void initState(){
-  //   super.initState();
-  //   // Future((){
-  //   //   isDisabled = false  ;
-  //   // });
-  //   WidgetsBinding.instance.addPostFrameCallback((_) => isDisabled = false  ;);
-  //   // isDisabled = false  ;
-  //
-  // }
+  bool isDisabled = false;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  void login(String email , password) async {
+  login(String email , password) async {
     
     try{
       
@@ -41,14 +31,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if(response.statusCode == 200){
         setState(() {
-          // isDisabled = true;
+          isDisabled = true;
         });
         var data = jsonDecode(response.body.toString());
-        print(data['token']);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Token ID: '+ data['token']+' Login successfully'),
         ));
-        print('Login successfully');
         Future.delayed(Duration(seconds: 3),(){
           Navigator.pushReplacementNamed(context, '/homepage');
         });
@@ -63,6 +51,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }catch(e){
       print(e.toString());
     }
+  }
+  void httpJob(AnimationController controller) async {
+    controller.forward();
+    print("delay start");
+    await Future.delayed(Duration(seconds: 3), () {});
+    print("delay stop");
+    controller.reset();
   }
   @override
   Widget build(BuildContext context) {
@@ -90,26 +85,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             SizedBox(height: 40,),
-            GestureDetector(
-              onTap: (){
-                login(emailController.text.toString(), passwordController.text.toString());
-                // setState(() {
-                //   isD
-                // });
-                // jsonDecode(source)
-              },
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  // color: isDisabled? Colors.grey:Colors.green,
-                  borderRadius: BorderRadius.circular(10)
-                ),
-                child: Center(child: Text('Login'),),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          ElevatedButton.icon(
+      onPressed: isDisabled ? null : ()=>login(emailController.text.toString(), passwordController.text.toString()),
+      style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(16.0)),
+    icon: isDisabled
+    ? Container(
+    width: 24,
+    height: 24,
+    padding: const EdgeInsets.all(2.0),
+    child: const CircularProgressIndicator(
+    color: Colors.white,
+    strokeWidth: 3,
+    ),
+    )
+        : const Icon(Icons.arrow_forward_rounded),
+    label: const Text('SUBMIT'),
+    )
+      ]),
+    ));
   }
 }
+
