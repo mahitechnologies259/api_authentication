@@ -12,6 +12,18 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
 
+  // bool isDisabled = false;
+  // @override
+  // void initState(){
+  //   super.initState();
+  //   // Future((){
+  //   //   isDisabled = false  ;
+  //   // });
+  //   WidgetsBinding.instance.addPostFrameCallback((_) => isDisabled = false  ;);
+  //   // isDisabled = false  ;
+  //
+  // }
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -28,17 +40,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
       if(response.statusCode == 200){
-        
+        setState(() {
+          // isDisabled = true;
+        });
         var data = jsonDecode(response.body.toString());
         print(data['token']);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(data['token']),
+          content: Text('Token ID: '+ data['token']+' Login successfully'),
         ));
         print('Login successfully');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Login successfully'),
-        ));
-
+        Future.delayed(Duration(seconds: 3),(){
+          Navigator.pushReplacementNamed(context, '/homepage');
+        });
 
       }else {
         print('failed');
@@ -80,16 +93,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
             GestureDetector(
               onTap: (){
                 login(emailController.text.toString(), passwordController.text.toString());
+                // setState(() {
+                //   isD
+                // });
+                // jsonDecode(source)
               },
               child: Container(
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  // color: isDisabled? Colors.grey:Colors.green,
                   borderRadius: BorderRadius.circular(10)
                 ),
                 child: Center(child: Text('Login'),),
               ),
-            )
+            ),
           ],
         ),
       ),

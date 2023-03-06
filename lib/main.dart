@@ -1,3 +1,4 @@
+import 'package:api_authentication/homepage.dart';
 import 'package:flutter/material.dart';
 import 'signup.dart';
 
@@ -15,6 +16,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData.dark(),
       home: const SignUpScreen(),
+      routes: {
+        // '/': (context) => SignUpScreen(),
+        '/homepage': (context) => HomePage(),
+      },
     );
   }
 }
